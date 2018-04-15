@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link, Route, Switch } from 'react-router-dom';
+import HomeContainer from './home/home_container';
 
 const App = () => (
-  <div>This is the App</div>
+  <div>
+    <HomeContainer />
+  </div>
 );
 
 export default App;
