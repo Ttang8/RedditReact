@@ -12,22 +12,38 @@ class Home extends Component {
       viewNsfw: false
     };
     this.handleScroll = this.handleScroll.bind(this);
+    this.debounce = this.debounce.bind(this);
   }
 
   componentDidMount () {
     this.props.requestPosts()
       .then(() => this.handleAfter());
-    window.addEventListener('scroll', this.handleScroll);
+    window.addEventListener('scroll', this.debounce(this.handleScroll));
   }
 
   componentWillUnmount () {
     window.removeEventListener('scroll', this.handleScroll);
   }
 
+  debounce(func, wait = 200, immediate = true) {
+    var timeout;
+    return function() {
+      var context = this, args = arguments;
+      var later = function() {
+        timeout = null;
+        if (!immediate) func.apply(context, args);
+      };
+      var callNow = immediate && !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+      if (callNow) func.apply(context, args);
+    };
+  }
+
   handleScroll (e) {
     let scroll = e.path[1].scrollY + e.path[1].innerHeight;
     let windowHeight = document.body.offsetHeight;
-    if (scroll > windowHeight) {
+    if (scroll > windowHeight-100) {
       this.props.requestPosts(this.state.afterString, this.props.posts.length)
         .then(() => this.handleAfter());
     }
@@ -36,6 +52,7 @@ class Home extends Component {
   handleAfter () {
     this.setState({afterString: this.props.posts[this.props.posts.length-1].data.name});
   }
+
 
   renderPosts () {
     let posts = this.props.posts.map((post,idx) => {
