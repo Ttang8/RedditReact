@@ -1,13 +1,15 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
 import GifPlayer from 'react-gif-player';
+import Masonry from 'react-masonry-component';
 
 class Home extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      afterString: ""
+      afterString: "",
+      viewNsfw: false
     };
     this.handleScroll = this.handleScroll.bind(this);
   }
@@ -23,11 +25,10 @@ class Home extends Component {
   }
 
   handleScroll (e) {
-    console.log(this.state.afterString);
     let scroll = e.path[1].scrollY + e.path[1].innerHeight;
     let windowHeight = document.body.offsetHeight;
     if (scroll > windowHeight) {
-      this.props.requestPosts(this.state.afterString)
+      this.props.requestPosts(this.state.afterString, this.props.posts.length)
         .then(() => this.handleAfter());
     }
   }
@@ -38,6 +39,12 @@ class Home extends Component {
 
   renderPosts () {
     let posts = this.props.posts.map((post,idx) => {
+      if (!this.state.viewNsfw) {
+        if (post.data.parent_whitelist_status.includes('nsfw')) {
+          return;
+        }
+      }
+
       if (post.data.url.includes('png') || post.data.url.includes('jpg')) {
         return(
           <li className="image" key={idx}>

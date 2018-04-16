@@ -14,13 +14,13 @@ img, video {
 }
 
 .cols {
-    -moz-column-count:3;
-    -moz-column-gap: 3%;
-    -moz-column-width: 30%;
-    -webkit-column-count:3;
-    -webkit-column-gap: 3%;
-    -webkit-column-width: 30%;
-    column-count: 4;
-    column-gap: 3%;
-    column-width: 30%;
+  -moz-column-count:3;
+  -moz-column-gap: 3%;
+  -moz-column-width: 30%;
+  -webkit-column-count:3;
+  -webkit-column-gap: 3%;
+  -webkit-column-width: 30%;
+  column-count: 4;
+  column-gap: 3%;
+  column-width: 30%;
 }
