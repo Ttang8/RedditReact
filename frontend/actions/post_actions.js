@@ -7,6 +7,6 @@ export const receivePosts = object => ({
   posts: object.data.children
 });
 
-export const requestPosts = () => dispatch => (
-  APIUtil.requestPosts().then(posts => dispatch(receivePosts(posts)))
+export const requestPosts = (afterString) => dispatch => (
+  APIUtil.requestPosts(afterString).then(posts => dispatch(receivePosts(posts)))
 );

@@ -10,7 +10,7 @@ const mapStateToProps = ({posts}) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  requestPosts: () => dispatch(requestPosts())
+  requestPosts: (afterString) => dispatch(requestPosts(afterString))
 });
 
 export default connect(

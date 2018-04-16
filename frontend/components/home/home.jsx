@@ -6,11 +6,34 @@ class Home extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = {
+      afterString: ""
+    };
+    this.handleScroll = this.handleScroll.bind(this);
   }
 
   componentDidMount () {
-    this.props.requestPosts();
+    this.props.requestPosts()
+      .then(() => this.handleAfter());
+    window.addEventListener('scroll', this.handleScroll);
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('scroll', this.handleScroll);
+  }
+
+  handleScroll (e) {
+    console.log(this.state.afterString);
+    let scroll = e.path[1].scrollY + e.path[1].innerHeight;
+    let windowHeight = document.body.offsetHeight;
+    if (scroll > windowHeight) {
+      this.props.requestPosts(this.state.afterString)
+        .then(() => this.handleAfter());
+    }
+  }
+
+  handleAfter () {
+    this.setState({afterString: this.props.posts[this.props.posts.length-1].data.name});
   }
 
   renderPosts () {
@@ -22,13 +45,29 @@ class Home extends Component {
           </li>
         );
       } else if (post.data.url.includes('gif')){
-        let videourl = post.data.url.replace('.gifv', '.mp4');
+        if (post.data.url[post.data.url.length-1] === 'v') {
+          let index = post.data.url.indexOf('.gifv');
+          let videourl = post.data.url.slice(0, index) + ".mp4";
+          return(
+            <li className="image" key={idx}>
+              <video autoPlay controls loop src={videourl}></video>
+            </li>
+          );
+        } else {
+          return(
+            <li className="image" key={idx}>
+              <img src={post.data.url}></img>
+            </li>
+          );
+        }
+      } else if (post.data.url.includes('imgur')) {
+        let imgrurl = post.data.url + ".jpg";
         return(
           <li className="image" key={idx}>
-            <video autoPlay controls loop src={videourl}></video>
+            <img src={imgrurl}></img>
           </li>
         );
-      } else {
+      }else {
         return;
       }
     });
@@ -36,7 +75,7 @@ class Home extends Component {
   }
 
   render () {
-    if (this.props.posts) {
+    if (this.props.posts[0]) {
       return (
         <div>
           <ul className="image_container cols">
