@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
+import GifPlayer from 'react-gif-player';
 
 class Home extends Component {
   constructor(props) {
@@ -14,21 +15,31 @@ class Home extends Component {
 
   renderPosts () {
     let posts = this.props.posts.map((post,idx) => {
-      return(
-        <li key={idx}>
-          <img src={post.data.url}></img>
-        </li>
-      );
+      if (post.data.url.includes('png') || post.data.url.includes('jpg')) {
+        return(
+          <li className="image" key={idx}>
+            <img src={post.data.url}></img>
+          </li>
+        );
+      } else if (post.data.url.includes('gif')){
+        let videourl = post.data.url.replace('.gifv', '.mp4');
+        return(
+          <li className="image" key={idx}>
+            <video autoPlay controls loop src={videourl}></video>
+          </li>
+        );
+      } else {
+        return;
+      }
     });
     return posts;
   }
 
   render () {
-    console.log(this.props.posts);
     if (this.props.posts) {
       return (
         <div>
-          <ul>
+          <ul className="image_container cols">
             {this.renderPosts()}
           </ul>
         </div>
