@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom';
 import GifPlayer from 'react-gif-player';
 import Masonry from 'react-masonry-component';
 
+const masonryOptions = {
+    transitionDuration: 0.5
+};
+
 class Home extends Component {
   constructor(props) {
     super(props);
@@ -13,6 +17,7 @@ class Home extends Component {
     };
     this.handleScroll = this.handleScroll.bind(this);
     this.debounce = this.debounce.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount () {
@@ -25,7 +30,13 @@ class Home extends Component {
     window.removeEventListener('scroll', this.handleScroll);
   }
 
-  debounce(func, wait = 200, immediate = true) {
+  handleClick (e) {
+    e.preventDefault();
+    this.props.requestPosts(this.state.afterString, this.props.posts.length)
+      .then(() => this.handleAfter());
+  }
+
+  debounce(func, wait = 20, immediate = true) {
     var timeout;
     return function() {
       var context = this, args = arguments;
@@ -44,8 +55,7 @@ class Home extends Component {
     let scroll = e.path[1].scrollY + e.path[1].innerHeight;
     let windowHeight = document.body.offsetHeight;
     if (scroll > windowHeight-100) {
-      this.props.requestPosts(this.state.afterString, this.props.posts.length)
-        .then(() => this.handleAfter());
+      console.log('hit');
     }
   }
 
@@ -57,8 +67,10 @@ class Home extends Component {
   renderPosts () {
     let posts = this.props.posts.map((post,idx) => {
       if (!this.state.viewNsfw) {
-        if (post.data.parent_whitelist_status.includes('nsfw')) {
-          return;
+        if (post.data.parent_whitelist_status) {
+          if (post.data.parent_whitelist_status.includes('nsfw')) {
+            return;
+          }
         }
       }
 
@@ -101,10 +113,17 @@ class Home extends Component {
   render () {
     if (this.props.posts[0]) {
       return (
-        <div>
-          <ul className="image_container cols">
-            {this.renderPosts()}
-          </ul>
+        <div className="gallery-container">
+          <Masonry
+                className={'my-gallery-class'}
+                elementType={'ul'}
+                options={masonryOptions}
+            >
+              {this.renderPosts()}
+          </Masonry>
+          <div className="load-button">
+            <button onClick={this.handleClick}>Load More</button>
+          </div>
         </div>
       );
     } else {

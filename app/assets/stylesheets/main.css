@@ -1,10 +1,15 @@
 .image {
-  margin-bottom: 20px;
+  width: 30%;
+  /* height: 30%; */
+  /* margin-bottom: 20px; */
+  margin: 20px;
 }
 
 .image_container {
-  width: 97%;
-  margin: 2em auto;
+  display: flex;
+  flex-wrap: wrap;
+  /* width: 97%;
+  margin: 2em auto; */
 }
 
 img, video {
@@ -13,7 +18,7 @@ img, video {
   border-color: black;
 }
 
-.cols {
+/* .cols {
   -moz-column-count:3;
   -moz-column-gap: 3%;
   -moz-column-width: 30%;
@@ -23,4 +28,22 @@ img, video {
   column-count: 4;
   column-gap: 3%;
   column-width: 30%;
+} */
+
+.my-gallery-class {
+  display: flex;
+  justify-content: center;
+}
+
+.gallery-container {
+
+}
+
+.load-button {
+  display: flex;
+  justify-content: center;
+}
+
+footer {
+  height: 50px;
 }
