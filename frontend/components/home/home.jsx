@@ -13,11 +13,15 @@ class Home extends Component {
 
     this.state = {
       afterString: "",
-      viewNsfw: false
+      viewNsfw: true,
+      title: "all",
+      subreddit: undefined
     };
     this.handleScroll = this.handleScroll.bind(this);
     this.debounce = this.debounce.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleNSFW = this.handleNSFW.bind(this);
   }
 
   componentDidMount () {
@@ -32,7 +36,16 @@ class Home extends Component {
 
   handleClick (e) {
     e.preventDefault();
-    this.props.requestPosts(this.state.afterString, this.props.posts.length)
+    this.props.requestPosts(this.state.afterString, this.props.posts.length, this.state.title)
+      .then(() => this.handleAfter());
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    let permSub = this.state.subreddit;
+    this.props.clearPosts();
+    this.props.requestPosts(undefined,25,this.state.subreddit)
+      .then(this.setState({title: permSub}))
       .then(() => this.handleAfter());
   }
 
@@ -59,10 +72,22 @@ class Home extends Component {
     }
   }
 
+  handleNSFW (e) {
+    e.preventDefault();
+    if (this.state.viewNsfw) {
+      this.setState({viewNsfw: false});
+    } else {
+      this.setState({viewNsfw: true});
+    }
+  }
+
   handleAfter () {
     this.setState({afterString: this.props.posts[this.props.posts.length-1].data.name});
   }
 
+  update(field){
+    return event => this.setState({[field]: event.target.value});
+  }
 
   renderPosts () {
     let posts = this.props.posts.map((post,idx) => {
@@ -113,16 +138,26 @@ class Home extends Component {
   render () {
     if (this.props.posts[0]) {
       return (
-        <div className="gallery-container">
-          <Masonry
-                className={'my-gallery-class'}
-                elementType={'ul'}
-                options={masonryOptions}
-            >
+        <div>
+          <div>
+            <form onSubmit={this.handleSubmit}>
+              <input placeholder="Subreddit" type="text" autoFocus="autofocus" value={this.state.subreddit} onChange={this.update('subreddit')}></input>
+              <input type="submit" value="Submit"></input>
+            </form>
+            <button onClick={this.handleNSFW} value={this.state.viewNsfw? "nsfw on" : "nsfw off"}></button>
+            <h1>{this.state.title}</h1>
+          </div>
+          <div className="gallery-container">
+            <Masonry
+              className={'my-gallery-class'}
+              elementType={'ul'}
+              options={masonryOptions}
+              >
               {this.renderPosts()}
-          </Masonry>
-          <div className="load-button">
-            <button onClick={this.handleClick}>Load More</button>
+            </Masonry>
+            <div className="load-button">
+              <button onClick={this.handleClick}>Load More</button>
+            </div>
           </div>
         </div>
       );

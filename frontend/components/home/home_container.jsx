@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import Home from './home';
-import { requestPosts } from '../../actions/post_actions';
+import { requestPosts, clearPosts} from '../../actions/post_actions';
 import { selectAllPosts } from '../../reducers/selectors';
 
 const mapStateToProps = ({posts}) => {
@@ -10,7 +10,8 @@ const mapStateToProps = ({posts}) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-  requestPosts: (afterString, postCount) => dispatch(requestPosts(afterString, postCount))
+  requestPosts: (afterString, postCount, subreddit) => dispatch(requestPosts(afterString, postCount, subreddit)),
+  clearPosts: () => dispatch(clearPosts())
 });
 
 export default connect(
