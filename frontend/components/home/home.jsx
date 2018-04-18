@@ -13,7 +13,7 @@ class Home extends Component {
 
     this.state = {
       afterString: "",
-      viewNsfw: true,
+      viewNsfw: false,
       title: "all",
       subreddit: undefined
     };
@@ -98,7 +98,6 @@ class Home extends Component {
           }
         }
       }
-
       if (post.data.url.includes('png') || post.data.url.includes('jpg')) {
         return(
           <li className="image" key={idx}>
@@ -116,7 +115,7 @@ class Home extends Component {
           );
         } else {
           return(
-            <li className="image" key={idx}>
+            <li className="image materialboxed" key={idx}>
               <img src={post.data.url}></img>
             </li>
           );
@@ -144,7 +143,7 @@ class Home extends Component {
               <input placeholder="Subreddit" type="text" autoFocus="autofocus" value={this.state.subreddit} onChange={this.update('subreddit')}></input>
               <input type="submit" value="Submit"></input>
             </form>
-            <button onClick={this.handleNSFW} value={this.state.viewNsfw? "nsfw on" : "nsfw off"}></button>
+            <button onClick={this.handleNSFW} >{this.state.viewNsfw? "nsfw on" : "nsfw off"}</button>
             <h1>{this.state.title}</h1>
           </div>
           <div className="gallery-container">
