@@ -3,9 +3,10 @@ import Home from './home';
 import { requestPosts, clearPosts} from '../../actions/post_actions';
 import { selectAllPosts } from '../../reducers/selectors';
 
-const mapStateToProps = ({posts}) => {
+const mapStateToProps = ({posts, imgurUrl}) => {
   return {
-    posts: selectAllPosts(posts)
+    posts: selectAllPosts(posts),
+    imgurUrl
   };
 };
 

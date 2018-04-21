@@ -1,4 +1,4 @@
-import { RECEIVE_POSTS, CLEAR_POSTS } from '../actions/post_actions';
+import { RECEIVE_POSTS, CLEAR_POSTS} from '../actions/post_actions';
 import merge from 'lodash/merge';
 
 const PostReducer = (state = {}, action) => {

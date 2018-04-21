@@ -22,6 +22,7 @@ class Home extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleNSFW = this.handleNSFW.bind(this);
+    console.log('url',this.props);
   }
 
   componentDidMount () {
@@ -46,6 +47,7 @@ class Home extends Component {
     this.props.clearPosts();
     this.props.requestPosts(undefined,25,this.state.subreddit)
       .then(this.setState({title: permSub}))
+      .then(this.setState({subreddit: undefined}))
       .then(() => this.handleAfter());
   }
 
@@ -100,7 +102,7 @@ class Home extends Component {
       }
       if (post.data.url.includes('png') || post.data.url.includes('jpg')) {
         return(
-          <li className="image" key={idx}>
+          <li className="image deactive" key={idx}>
             <img src={post.data.url}></img>
           </li>
         );
@@ -109,13 +111,13 @@ class Home extends Component {
           let index = post.data.url.indexOf('.gifv');
           let videourl = post.data.url.slice(0, index) + ".mp4";
           return(
-            <li className="image" key={idx}>
+            <li className="image deactive" key={idx}>
               <video autoPlay controls loop src={videourl}></video>
             </li>
           );
         } else {
           return(
-            <li className="image materialboxed" key={idx}>
+            <li className="image deactive" key={idx}>
               <img src={post.data.url}></img>
             </li>
           );
@@ -123,7 +125,7 @@ class Home extends Component {
       } else if (post.data.url.includes('imgur')) {
         let imgrurl = post.data.url + ".jpg";
         return(
-          <li className="image" key={idx}>
+          <li className="image deactive" key={idx}>
             <img src={imgrurl}></img>
           </li>
         );
@@ -134,23 +136,39 @@ class Home extends Component {
     return posts;
   }
 
+  handleImagesLoaded(images) {
+    // console.log('hit handle images loaded',images);
+    // setTimeout(() => images.elements[0].childNodes.forEach(img => {
+    //   img.className = "image active";
+    // }), 2000);
+  }
+
+  handleLayoutComplete(laidoutitems) {
+    console.log('hit layout complete');
+    setTimeout(() => laidoutitems.forEach(img => {
+      img.element.className = "image active";
+    }), 2000);
+  }
+
   render () {
     if (this.props.posts[0]) {
       return (
         <div>
-          <div>
+          <div className="search-bar">
             <form onSubmit={this.handleSubmit}>
               <input placeholder="Subreddit" type="text" autoFocus="autofocus" value={this.state.subreddit} onChange={this.update('subreddit')}></input>
               <input type="submit" value="Submit"></input>
             </form>
             <button onClick={this.handleNSFW} >{this.state.viewNsfw? "nsfw on" : "nsfw off"}</button>
-            <h1>{this.state.title}</h1>
           </div>
+          <h1>{this.state.title}</h1>
           <div className="gallery-container">
             <Masonry
               className={'my-gallery-class'}
               elementType={'ul'}
               options={masonryOptions}
+              onImagesLoaded={images => this.handleImagesLoaded(images)}
+              onLayoutComplete={laidOutItems => this.handleLayoutComplete(laidOutItems)}
               >
               {this.renderPosts()}
             </Masonry>

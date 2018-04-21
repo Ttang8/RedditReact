@@ -5,3 +5,25 @@ export const requestPosts = (afterString = "", postCount = "", subreddit = "all"
     dataType: "json"
   })
 );
+
+export const scrapeImgur = (url) => (
+  $.ajax({
+    method: 'GET',
+    url: `https://cors-anywhere.herokuapp.com/${url}`,
+    dataType: 'html',
+    crossDomain: true,
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    },
+    jsonpCallback: "callback",
+    success: result => {
+      let htmlString = $(result);
+      let imageUrl = htmlString.find('.post-image');
+      let imageSrc = imageUrl[0].children[0].src;
+      console.log('please',imageSrc);
+    },
+    error: function(httpReq,status,exception){
+      console.log('httpReq', httpReq, status, exception);
+    }
+  }
+));
