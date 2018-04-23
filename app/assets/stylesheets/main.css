@@ -61,3 +61,24 @@ footer {
 .deactive {
   opacity: 0;
 }
+
+.image_overlay {
+  position: absolute;
+  opacity: 0;
+  font-size: 20px;
+  /* margin-top: 92px; */
+  color: white;
+  text-align: center;
+  line-height: 25px;
+  background: linear-gradient(to top, rgba(255,0,0,0), black);
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  z-index: 1;
+  transition: opacity 1s;
+}
+
+.image_overlay:hover {
+  opacity: 1;
+}

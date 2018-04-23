@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom';
+import WholePost from './posts';
 import GifPlayer from 'react-gif-player';
 import Masonry from 'react-masonry-component';
 
@@ -12,6 +13,7 @@ class Home extends Component {
     super(props);
 
     this.state = {
+      viewPosts: true,
       afterString: "",
       viewNsfw: false,
       title: "all",
@@ -24,6 +26,7 @@ class Home extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleNSFW = this.handleNSFW.bind(this);
     this.createArray = this.createArray.bind(this);
+    this.toggleViewPosts = this.toggleViewPosts.bind(this);
   }
 
   componentDidMount () {
@@ -144,7 +147,14 @@ class Home extends Component {
       if (post.includes('png') || post.includes('jpg')) {
         return(
           <li className="image deactive" key={idx}>
-            <img src={post}></img>
+            <a href={this.props.posts[idx].data.url} target="_blank">
+              <div className="image_overlay">
+                <a href={`https://reddit.com${this.props.posts[idx].data.permalink}`}>
+                  &nbsp;{this.props.posts[idx].data.title}
+                </a>
+              </div>
+              <img src={post}></img>
+            </a>
           </li>
         );
       } else if (post.includes('gfycat')) {
@@ -157,7 +167,17 @@ class Home extends Component {
         let gfyurl = "https://giant.gfycat.com/" + post.slice(index) + ".mp4";
           return(
             <li className="image deactive" key={idx}>
-              <video autoPlay controls loop src={gfyurl}></video>
+              <a href={this.props.posts[idx].data.url} target="_blank">
+                <div className="image_overlay">
+                  <a href={`https://reddit.com${this.props.posts[idx].data.permalink}`}>
+                    &nbsp;{this.props.posts[idx].data.title}
+                  </a>
+                </div>
+                <video autoPlay loop poster={this.props.posts[idx].data.thumbnail}>
+                  <source src={gfyurl} type="video/mp4"/>
+                  <img src={this.props.posts[idx].data.thumbnail}></img>
+                </video>
+              </a>
             </li>
           );
         } else if (post.includes('gif')){
@@ -166,13 +186,27 @@ class Home extends Component {
           let videourl = post.slice(0, index) + ".mp4";
           return(
             <li className="image deactive" key={idx}>
-              <video autoPlay controls loop src={videourl}></video>
+              <a href={this.props.posts[idx].data.url} target="_blank">
+                <div className="image_overlay">
+                  <a href={`https://reddit.com${this.props.posts[idx].data.permalink}`}>
+                    &nbsp;{this.props.posts[idx].data.title}
+                  </a>
+                </div>
+                <video autoPlay loop src={videourl}></video>
+              </a>
             </li>
           );
         } else {
           return(
             <li className="image deactive" key={idx}>
-              <img src={post}></img>
+              <a href={this.props.posts[idx].data.url} target="_blank">
+                <div className="image_overlay">
+                  <a href={`https://reddit.com${this.props.posts[idx].data.permalink}`}>
+                    &nbsp;{this.props.posts[idx].data.title}
+                  </a>
+                </div>
+                <img src={post}></img>
+              </a>
             </li>
           );
         }
@@ -185,7 +219,14 @@ class Home extends Component {
             let url = string.slice(index);
         return(
           <li className="image deactive" key={idx}>
-            <img src={url}></img>
+            <a href={this.props.posts[idx].data.url} target="_blank">
+              <div className="image_overlay">
+                <a href={`https://reddit.com${this.props.posts[idx].data.permalink}`}>
+                  &nbsp;{this.props.posts[idx].data.title}
+                </a>
+              </div>
+              <img src={url}></img>
+            </a>
           </li>
         );
       });
@@ -208,34 +249,61 @@ class Home extends Component {
     }), 1500);
   }
 
+  toggleViewPosts(e) {
+    e.preventDefault();
+    if (this.state.viewPosts) {
+      this.setState({viewPosts: false});
+    } else {
+      this.setState({viewPosts: true});
+    }
+  }
+
   render () {
     if (this.props.posts[0]) {
-      return (
-        <div>
-          <div className="search-bar">
-            <form onSubmit={this.handleSubmit}>
-              <input placeholder="Subreddit" type="text" autoFocus="autofocus" value={this.state.subreddit} onChange={this.update('subreddit')}></input>
-              <input type="submit" value="Submit"></input>
-            </form>
-            <button onClick={this.handleNSFW} >{this.state.viewNsfw? "nsfw on" : "nsfw off"}</button>
+      if (this.state.viewPosts) {
+        return(
+          <div>
+            <div className="search-bar">
+              <form onSubmit={this.handleSubmit}>
+                <input placeholder="Subreddit" type="text" autoFocus="autofocus" value={this.state.subreddit} onChange={this.update('subreddit')}></input>
+                <input type="submit" value="Submit"></input>
+              </form>
+              <button onClick={this.handleNSFW} >{this.state.viewNsfw? "nsfw on" : "nsfw off"}</button>
+            </div>
+            <h1>{this.state.title}</h1>
+            <button onClick={this.toggleViewPosts}>{this.state.viewPosts? "Images" : "Post Lists"}</button>
+            <WholePost posts={this.props.posts}></WholePost>
           </div>
-          <h1>{this.state.title}</h1>
-          <div className="gallery-container">
-            <Masonry
-              className={'my-gallery-class'}
-              elementType={'ul'}
-              options={masonryOptions}
-              onImagesLoaded={images => this.handleImagesLoaded(images)}
-              onLayoutComplete={laidOutItems => this.handleLayoutComplete(laidOutItems)}
-              >
-              {this.renderPosts()}
-            </Masonry>
-            <div className="load-button">
-              <button onClick={this.handleClick}>Load More</button>
+        );
+      } else if (!this.state.viewPosts) {
+        return (
+          <div>
+            <div className="search-bar">
+              <form onSubmit={this.handleSubmit}>
+                <input placeholder="Subreddit" type="text" autoFocus="autofocus" value={this.state.subreddit} onChange={this.update('subreddit')}></input>
+                <input type="submit" value="Submit"></input>
+              </form>
+              <button onClick={this.handleNSFW} >{this.state.viewNsfw? "nsfw on" : "nsfw off"}</button>
+            </div>
+            <h1>{this.state.title}</h1>
+            <button onClick={this.toggleViewPosts}>{this.state.viewPosts? "Images" : "Post Lists"}</button>
+            <div className="gallery-container">
+              <Masonry
+                className={'my-gallery-class'}
+                elementType={'ul'}
+                options={masonryOptions}
+                onImagesLoaded={images => this.handleImagesLoaded(images)}
+                onLayoutComplete={laidOutItems => this.handleLayoutComplete(laidOutItems)}
+                >
+                {this.renderPosts()}
+              </Masonry>
+              <div className="load-button">
+                <button onClick={this.handleClick}>Load More</button>
+              </div>
             </div>
           </div>
-        </div>
-      );
+        );
+      }
     } else {
       return (
         <div></div>
