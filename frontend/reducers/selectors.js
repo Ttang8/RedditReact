@@ -15,7 +15,7 @@ export const selectImgurUrl = (result) => {
       return imageSrc.src;
     } else if (imageSrc.href) {
       console.log('href', JSON.stringify(imageSrc.href).slice(5));
-      return JSON.stringify(imageSrc.href);
+      return imageSrc.href;
     }
   }
 };

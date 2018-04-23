@@ -99,18 +99,19 @@ class Home extends Component {
       if (post.data.url.includes('png') || post.data.url.includes('jpg') || post.data.url.includes('gif') || post.data.url.includes('gfycat')) {
         return post.data.url;
       } else if (post.data.url.includes('imgur')) {
-        let imgrurl = post.data.url;
-        let newurl = this.props.scrapeImgur(imgrurl)
-          .then(() => {
-            console.log('hit over here', this.props.imgurUrl);
-            let string = this.props.imgurUrl;
-            let index = string.indexOf('i.imgur');
-            let url = string.slice(index);
-            console.log('url',("https://" + url));
-            let newurl2 =  ("https://" + url);
-            return newurl2;
-          });
-          return newurl;
+        // let imgrurl = post.data.url;
+        // let newurl = this.props.scrapeImgur(imgrurl)
+        //   .then(() => {
+        //     console.log('hit over here', this.props.imgurUrl);
+        //     let string = this.props.imgurUrl;
+        //     let index = string.indexOf('i.imgur');
+        //     let url = string.slice(index);
+        //     console.log('url',("https://" + url));
+        //     let newurl2 =  ("https://" + url);
+        //     return newurl2;
+          // });
+          // return newurl;
+          return post.data.thumbnail;
       } else {
         return post.data.thumbnail;
       }
