@@ -15,20 +15,21 @@ class Home extends Component {
       afterString: "",
       viewNsfw: false,
       title: "all",
-      subreddit: undefined
+      subreddit: undefined,
+      array: []
     };
     this.handleScroll = this.handleScroll.bind(this);
     this.debounce = this.debounce.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleNSFW = this.handleNSFW.bind(this);
-    console.log('url',this.props);
   }
 
   componentDidMount () {
     this.props.requestPosts()
-      .then(() => this.handleAfter());
-    window.addEventListener('scroll', this.debounce(this.handleScroll));
+      .then(() => this.handleAfter())
+      .then(() => this.createArray());
+    // window.addEventListener('scroll', this.debounce(this.handleScroll));
   }
 
   componentWillUnmount () {
@@ -38,7 +39,8 @@ class Home extends Component {
   handleClick (e) {
     e.preventDefault();
     this.props.requestPosts(this.state.afterString, this.props.posts.length, this.state.title)
-      .then(() => this.handleAfter());
+      .then(() => this.handleAfter())
+      .then(() => this.createArray());
   }
 
   handleSubmit(e) {
@@ -48,7 +50,8 @@ class Home extends Component {
     this.props.requestPosts(undefined,25,this.state.subreddit)
       .then(this.setState({title: permSub}))
       .then(this.setState({subreddit: undefined}))
-      .then(() => this.handleAfter());
+      .then(() => this.handleAfter())
+      .then(() => this.createArray());
   }
 
   debounce(func, wait = 20, immediate = true) {
@@ -91,25 +94,70 @@ class Home extends Component {
     return event => this.setState({[field]: event.target.value});
   }
 
-  renderPosts () {
-    let posts = this.props.posts.map((post,idx) => {
-      if (!this.state.viewNsfw) {
-        if (post.data.parent_whitelist_status) {
-          if (post.data.parent_whitelist_status.includes('nsfw')) {
-            return;
-          }
-        }
+  createArray() {
+    let array = this.props.posts.map((post) => {
+      if (post.data.url.includes('png') || post.data.url.includes('jpg') || post.data.url.includes('gif') || post.data.url.includes('gfycat')) {
+        return post.data.url;
+      } else if (post.data.url.includes('imgur')) {
+        let imgrurl = post.data.url;
+        let newurl = this.props.scrapeImgur(imgrurl)
+          .then(() => {
+            console.log('hit over here', this.props.imgurUrl);
+            let string = this.props.imgurUrl;
+            let index = string.indexOf('i.imgur');
+            let url = string.slice(index);
+            console.log('url',("https://" + url));
+            let newurl2 =  ("https://" + url);
+            return newurl2;
+          });
+          return newurl;
+      } else {
+        return post.data.thumbnail;
       }
-      if (post.data.url.includes('png') || post.data.url.includes('jpg')) {
+    });
+    Promise.all(array)
+      .then((results) => {
+        this.setState({array: results});
+      });
+    console.log('array',this.state.array);
+  }
+
+  renderPosts () {
+    console.log('render array',this.state.array);
+    let posts = this.state.array.map((post,idx) => {
+      // if (!this.state.viewNsfw) {
+      //   if (post.data.parent_whitelist_status) {
+      //     if (post.data.parent_whitelist_status.includes('nsfw')) {
+      //       return;
+      //     }
+      //   }
+      // }
+      if (post === undefined) {
+        return;
+      }
+      if (post.includes('png') || post.includes('jpg')) {
         return(
           <li className="image deactive" key={idx}>
-            <img src={post.data.url}></img>
+            <img src={post}></img>
           </li>
         );
-      } else if (post.data.url.includes('gif')){
-        if (post.data.url[post.data.url.length-1] === 'v') {
-          let index = post.data.url.indexOf('.gifv');
-          let videourl = post.data.url.slice(0, index) + ".mp4";
+      } else if (post.includes('gfycat')) {
+        let index;
+        if (post.includes('detail/')) {
+          index = post.indexOf('detail/') + 7;
+        } else {
+          index = post.indexOf('.com/') + 5;
+        }
+        let gfyurl = "https://giant.gfycat.com/" + post.slice(index) + ".mp4";
+          return(
+            <li className="image deactive" key={idx}>
+              <video autoPlay controls loop src={gfyurl}></video>
+            </li>
+          );
+        } else if (post.includes('gif')){
+        if (post[post.length-1] === 'v') {
+          let index = post.indexOf('.gifv');
+          let videourl = post.slice(0, index) + ".mp4";
           return(
             <li className="image deactive" key={idx}>
               <video autoPlay controls loop src={videourl}></video>
@@ -118,17 +166,24 @@ class Home extends Component {
         } else {
           return(
             <li className="image deactive" key={idx}>
-              <img src={post.data.url}></img>
+              <img src={post}></img>
             </li>
           );
         }
-      } else if (post.data.url.includes('imgur')) {
-        let imgrurl = post.data.url + ".jpg";
+      } else if (post.includes('imgur')) {
+        let imgrurl = post;
+        this.props.scrapeImgur(imgrurl)
+          .then(() => {
+            let string = this.props.imgurUrl;
+            let index = string.indexOf('i.imgur');
+            let url = string.slice(index);
+            console.log('url',url);
         return(
           <li className="image deactive" key={idx}>
-            <img src={imgrurl}></img>
+            <img src={url}></img>
           </li>
         );
+      });
       }else {
         return;
       }

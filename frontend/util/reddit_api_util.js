@@ -16,11 +16,8 @@ export const scrapeImgur = (url) => (
       'Access-Control-Allow-Origin': '*'
     },
     jsonpCallback: "callback",
-    success: result => {
-      let htmlString = $(result);
-      let imageUrl = htmlString.find('.post-image');
-      let imageSrc = imageUrl[0].children[0].src;
-      console.log('please',imageSrc);
+    success: {
+
     },
     error: function(httpReq,status,exception){
       console.log('httpReq', httpReq, status, exception);

@@ -23,5 +23,5 @@ export const requestPosts = (afterString, postCount, subreddit) => dispatch => (
 );
 
 export const scrapeImgur = (url) => dispatch => (
-  APIUtil.scrapeImgur(url).then(imageUrl => dispatch(receiveHtml(imageUrl)))
+  APIUtil.scrapeImgur(url).then(result => dispatch(receiveHtml(result)))
 );
