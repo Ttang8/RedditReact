@@ -27,7 +27,7 @@ class Home extends Component {
   }
 
   componentDidMount () {
-    this.props.requestPosts()
+    this.props.requestPosts(this.state.afterString, this.props.posts.length, this.state.title)
       .then(() => this.handleAfter())
       .then(() => this.createArray());
     // window.addEventListener('scroll', this.debounce(this.handleScroll));
@@ -130,9 +130,11 @@ class Home extends Component {
   renderPosts () {
     let posts = this.state.array.map((post,idx) => {
       if (!this.state.viewNsfw) {
-        if (this.props.posts[idx].data.parent_whitelist_status) {
-          if (this.props.posts[idx].data.parent_whitelist_status.includes('nsfw')) {
-            return;
+        if (this.props.posts[idx]) {
+          if (this.props.posts[idx].data.parent_whitelist_status) {
+            if (this.props.posts[idx].data.parent_whitelist_status.includes('nsfw')) {
+              return;
+            }
           }
         }
       }
@@ -203,7 +205,7 @@ class Home extends Component {
   handleLayoutComplete(laidoutitems) {
     setTimeout(() => laidoutitems.forEach(img => {
       img.element.className = "image active";
-    }), 2000);
+    }), 1500);
   }
 
   render () {
