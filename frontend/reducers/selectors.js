@@ -11,10 +11,8 @@ export const selectImgurUrl = (result) => {
     let imageUrl = htmlString.find('.post-image');
     let imageSrc = imageUrl[0].children[0];
     if (imageSrc.src) {
-      console.log('src', imageSrc.src);
       return imageSrc.src;
     } else if (imageSrc.href) {
-      console.log('href', JSON.stringify(imageSrc.href).slice(5));
       return imageSrc.href;
     }
   }

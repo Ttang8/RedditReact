@@ -4,7 +4,7 @@ import GifPlayer from 'react-gif-player';
 import Masonry from 'react-masonry-component';
 
 const masonryOptions = {
-    transitionDuration: 0.5
+    transitionDuration: 0
 };
 
 class Home extends Component {
@@ -23,6 +23,7 @@ class Home extends Component {
     this.handleClick = this.handleClick.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleNSFW = this.handleNSFW.bind(this);
+    this.createArray = this.createArray.bind(this);
   }
 
   componentDidMount () {
@@ -73,7 +74,6 @@ class Home extends Component {
     let scroll = e.path[1].scrollY + e.path[1].innerHeight;
     let windowHeight = document.body.offsetHeight;
     if (scroll > windowHeight-100) {
-      console.log('hit');
     }
   }
 
@@ -96,17 +96,22 @@ class Home extends Component {
 
   createArray() {
     let array = this.props.posts.map((post) => {
+      // if (!this.state.viewNsfw) {
+      //   if (post.data.parent_whitelist_status) {
+      //     if (post.data.parent_whitelist_status.includes('nsfw')) {
+      //       return "nsfw";
+      //     }
+      //   }
+      // }
       if (post.data.url.includes('png') || post.data.url.includes('jpg') || post.data.url.includes('gif') || post.data.url.includes('gfycat')) {
         return post.data.url;
       } else if (post.data.url.includes('imgur')) {
         // let imgrurl = post.data.url;
         // let newurl = this.props.scrapeImgur(imgrurl)
         //   .then(() => {
-        //     console.log('hit over here', this.props.imgurUrl);
         //     let string = this.props.imgurUrl;
         //     let index = string.indexOf('i.imgur');
         //     let url = string.slice(index);
-        //     console.log('url',("https://" + url));
         //     let newurl2 =  ("https://" + url);
         //     return newurl2;
           // });
@@ -116,23 +121,21 @@ class Home extends Component {
         return post.data.thumbnail;
       }
     });
-    Promise.all(array)
-      .then((results) => {
-        this.setState({array: results});
-      });
-    console.log('array',this.state.array);
+    // Promise.all(array)
+    //   .then((results) => {
+        this.setState({array: array});
+      // });
   }
 
   renderPosts () {
-    console.log('render array',this.state.array);
     let posts = this.state.array.map((post,idx) => {
-      // if (!this.state.viewNsfw) {
-      //   if (post.data.parent_whitelist_status) {
-      //     if (post.data.parent_whitelist_status.includes('nsfw')) {
-      //       return;
-      //     }
-      //   }
-      // }
+      if (!this.state.viewNsfw) {
+        if (this.props.posts[idx].data.parent_whitelist_status) {
+          if (this.props.posts[idx].data.parent_whitelist_status.includes('nsfw')) {
+            return;
+          }
+        }
+      }
       if (post === undefined) {
         return;
       }
@@ -178,7 +181,6 @@ class Home extends Component {
             let string = this.props.imgurUrl;
             let index = string.indexOf('i.imgur');
             let url = string.slice(index);
-            console.log('url',url);
         return(
           <li className="image deactive" key={idx}>
             <img src={url}></img>
@@ -193,14 +195,12 @@ class Home extends Component {
   }
 
   handleImagesLoaded(images) {
-    // console.log('hit handle images loaded',images);
     // setTimeout(() => images.elements[0].childNodes.forEach(img => {
     //   img.className = "image active";
     // }), 2000);
   }
 
   handleLayoutComplete(laidoutitems) {
-    console.log('hit layout complete');
     setTimeout(() => laidoutitems.forEach(img => {
       img.element.className = "image active";
     }), 2000);
