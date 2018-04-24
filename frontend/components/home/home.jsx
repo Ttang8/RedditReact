@@ -13,7 +13,7 @@ class Home extends Component {
     super(props);
 
     this.state = {
-      viewPosts: true,
+      viewPosts: false,
       afterString: "",
       viewNsfw: false,
       title: "all",
@@ -130,6 +130,11 @@ class Home extends Component {
       // });
   }
 
+  handleReddit(e) {
+    e.preventDefault();
+    window.open(e.target.dataset.link, '_blank');
+  }
+
   renderPosts () {
     let posts = this.state.array.map((post,idx) => {
       if (!this.state.viewNsfw) {
@@ -149,9 +154,9 @@ class Home extends Component {
           <li className="image deactive" key={idx}>
             <a href={this.props.posts[idx].data.url} target="_blank">
               <div className="image_overlay">
-                <a href={`https://reddit.com${this.props.posts[idx].data.permalink}`}>
-                  &nbsp;{this.props.posts[idx].data.title}
-                </a>
+                <div className="title_hover" onClick={this.handleReddit.bind(this)} data-link={`https://reddit.com${this.props.posts[idx].data.permalink}`}>
+                  {this.props.posts[idx].data.title}
+                </div>
               </div>
               <img src={post}></img>
             </a>
@@ -169,9 +174,9 @@ class Home extends Component {
             <li className="image deactive" key={idx}>
               <a href={this.props.posts[idx].data.url} target="_blank">
                 <div className="image_overlay">
-                  <a href={`https://reddit.com${this.props.posts[idx].data.permalink}`}>
-                    &nbsp;{this.props.posts[idx].data.title}
-                  </a>
+                  <div className="title_hover" onClick={this.handleReddit.bind(this)} data-link={`https://reddit.com${this.props.posts[idx].data.permalink}`}>
+                    {this.props.posts[idx].data.title}
+                  </div>
                 </div>
                 <video autoPlay loop poster={this.props.posts[idx].data.thumbnail}>
                   <source src={gfyurl} type="video/mp4"/>
@@ -188,9 +193,9 @@ class Home extends Component {
             <li className="image deactive" key={idx}>
               <a href={this.props.posts[idx].data.url} target="_blank">
                 <div className="image_overlay">
-                  <a href={`https://reddit.com${this.props.posts[idx].data.permalink}`}>
-                    &nbsp;{this.props.posts[idx].data.title}
-                  </a>
+                  <div className="title_hover" onClick={this.handleReddit.bind(this)} data-link={`https://reddit.com${this.props.posts[idx].data.permalink}`}>
+                    {this.props.posts[idx].data.title}
+                  </div>
                 </div>
                 <video autoPlay loop src={videourl}></video>
               </a>
@@ -201,9 +206,9 @@ class Home extends Component {
             <li className="image deactive" key={idx}>
               <a href={this.props.posts[idx].data.url} target="_blank">
                 <div className="image_overlay">
-                  <a href={`https://reddit.com${this.props.posts[idx].data.permalink}`}>
-                    &nbsp;{this.props.posts[idx].data.title}
-                  </a>
+                  <div className="title_hover" onClick={this.handleReddit.bind(this)} data-link={`https://reddit.com${this.props.posts[idx].data.permalink}`}>
+                    this.props.posts[idx].data.title}
+                  </div>
                 </div>
                 <img src={post}></img>
               </a>
@@ -221,9 +226,9 @@ class Home extends Component {
           <li className="image deactive" key={idx}>
             <a href={this.props.posts[idx].data.url} target="_blank">
               <div className="image_overlay">
-                <a href={`https://reddit.com${this.props.posts[idx].data.permalink}`}>
-                  &nbsp;{this.props.posts[idx].data.title}
-                </a>
+                <div className="title_hover" onClick={this.handleReddit.bind(this)} data-link={`https://reddit.com${this.props.posts[idx].data.permalink}`}>
+                  {this.props.posts[idx].data.title}
+                </div>
               </div>
               <img src={url}></img>
             </a>
@@ -263,14 +268,16 @@ class Home extends Component {
       if (this.state.viewPosts) {
         return(
           <div>
-            <div className="search-bar">
-              <form onSubmit={this.handleSubmit}>
-                <input placeholder="Subreddit" type="text" autoFocus="autofocus" value={this.state.subreddit} onChange={this.update('subreddit')}></input>
-                <input type="submit" value="Submit"></input>
-              </form>
-              <button onClick={this.handleNSFW} >{this.state.viewNsfw? "nsfw on" : "nsfw off"}</button>
+            <div className="header">
+              <div className="search-bar">
+                <form onSubmit={this.handleSubmit}>
+                  <input placeholder="Subreddit" type="text" autoFocus="autofocus" value={this.state.subreddit} onChange={this.update('subreddit')}></input>
+                  <input type="submit" value="Submit"></input>
+                </form>
+                <button onClick={this.handleNSFW} >{this.state.viewNsfw? "nsfw on" : "nsfw off"}</button>
+              </div>
+              <h1>r/{this.state.title}</h1>
             </div>
-            <h1>{this.state.title}</h1>
             <button onClick={this.toggleViewPosts}>{this.state.viewPosts? "Images" : "Post Lists"}</button>
             <WholePost posts={this.props.posts}></WholePost>
           </div>
@@ -278,14 +285,16 @@ class Home extends Component {
       } else if (!this.state.viewPosts) {
         return (
           <div>
-            <div className="search-bar">
-              <form onSubmit={this.handleSubmit}>
-                <input placeholder="Subreddit" type="text" autoFocus="autofocus" value={this.state.subreddit} onChange={this.update('subreddit')}></input>
-                <input type="submit" value="Submit"></input>
-              </form>
-              <button onClick={this.handleNSFW} >{this.state.viewNsfw? "nsfw on" : "nsfw off"}</button>
+            <div className="header">
+              <div className="search-bar">
+                <form onSubmit={this.handleSubmit}>
+                  <input placeholder="Subreddit" type="text" autoFocus="autofocus" value={this.state.subreddit} onChange={this.update('subreddit')}></input>
+                  <input type="submit" value="Submit"></input>
+                </form>
+                <button onClick={this.handleNSFW} >{this.state.viewNsfw? "nsfw on" : "nsfw off"}</button>
+                <h1>r/{this.state.title}</h1>
+              </div>
             </div>
-            <h1>{this.state.title}</h1>
             <button onClick={this.toggleViewPosts}>{this.state.viewPosts? "Images" : "Post Lists"}</button>
             <div className="gallery-container">
               <Masonry
