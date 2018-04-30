@@ -136,6 +136,8 @@ class Home extends Component {
   }
 
   renderPosts () {
+    console.log('state', this.state.array);
+    console.log('props', this.props.posts);
     let posts = this.state.array.map((post,idx) => {
       if (!this.state.viewNsfw) {
         if (this.props.posts[idx]) {
@@ -276,9 +278,14 @@ class Home extends Component {
                 </form>
                 <button onClick={this.handleNSFW} >{this.state.viewNsfw? "nsfw on" : "nsfw off"}</button>
               </div>
-              <h1>r/{this.state.title}</h1>
+              <div className="flex_container">
+                <h1>r/{this.state.title}</h1>
+                <div>
+                  <button className={`title_hover ${this.state.viewPosts? "":"bold"}`} onClick={this.toggleViewPosts}>Image Gallery</button>/
+                  <button className={this.state.viewPosts? "bold":""}>List View</button>
+                </div>
+              </div>
             </div>
-            <button onClick={this.toggleViewPosts}>{this.state.viewPosts? "Images" : "Post Lists"}</button>
             <WholePost posts={this.props.posts}></WholePost>
           </div>
         );
@@ -292,10 +299,15 @@ class Home extends Component {
                   <input type="submit" value="Submit"></input>
                 </form>
                 <button onClick={this.handleNSFW} >{this.state.viewNsfw? "nsfw on" : "nsfw off"}</button>
+              </div>
+              <div className="flex_container">
                 <h1>r/{this.state.title}</h1>
+                <div>
+                  <button className={this.state.viewPosts? "":"bold"}>Image Gallery</button>/
+                  <button className={`title_hover ${this.state.viewPosts? "bold":""}`} onClick={this.toggleViewPosts}>List View</button>
+                </div>
               </div>
             </div>
-            <button onClick={this.toggleViewPosts}>{this.state.viewPosts? "Images" : "Post Lists"}</button>
             <div className="gallery-container">
               <Masonry
                 className={'my-gallery-class'}

@@ -89,6 +89,28 @@ footer {
 
 .header {
   position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: white;
+  opacity: .8;
+  z-index: 100;
+}
+
+.my-gallery-class {
+  padding-top: 50px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.flex_container {
+  display: flex;
+  width: 95%;
+  justify-content: space-between;
 }
 
 @media (max-width: 1000px) {
