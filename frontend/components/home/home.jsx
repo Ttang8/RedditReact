@@ -180,7 +180,7 @@ class Home extends Component {
                     {this.props.posts[idx].data.title}
                   </div>
                 </div>
-                <video autoPlay loop poster={this.props.posts[idx].data.thumbnail}>
+                <video autoPlay muted loop poster={this.props.posts[idx].data.thumbnail}>
                   <source src={gfyurl} type="video/mp4"/>
                   <img src={this.props.posts[idx].data.thumbnail}></img>
                 </video>
@@ -199,7 +199,7 @@ class Home extends Component {
                     {this.props.posts[idx].data.title}
                   </div>
                 </div>
-                <video autoPlay loop src={videourl}></video>
+                <video autoPlay muted loop src={videourl}></video>
               </a>
             </li>
           );
@@ -247,13 +247,13 @@ class Home extends Component {
   handleImagesLoaded(images) {
     // setTimeout(() => images.elements[0].childNodes.forEach(img => {
     //   img.className = "image active";
-    // }), 2000);
+    // }), 5000);
   }
 
   handleLayoutComplete(laidoutitems) {
     setTimeout(() => laidoutitems.forEach(img => {
       img.element.className = "image active";
-    }), 1500);
+    }), 2500);
   }
 
   toggleViewPosts(e) {
