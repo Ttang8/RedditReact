@@ -136,8 +136,8 @@ class Home extends Component {
   }
 
   renderPosts () {
-    console.log('state', this.state.array);
-    console.log('props', this.props.posts);
+    // console.log('state', this.state.array);
+    // console.log('props', this.props.posts);
     let posts = this.state.array.map((post,idx) => {
       if (!this.state.viewNsfw) {
         if (this.props.posts[idx]) {
@@ -209,7 +209,7 @@ class Home extends Component {
               <a href={this.props.posts[idx].data.url} target="_blank">
                 <div className="image_overlay">
                   <div className="title_hover" onClick={this.handleReddit.bind(this)} data-link={`https://reddit.com${this.props.posts[idx].data.permalink}`}>
-                    this.props.posts[idx].data.title}
+                    {this.props.posts[idx].data.title}
                   </div>
                 </div>
                 <img src={post}></img>
@@ -266,6 +266,7 @@ class Home extends Component {
   }
 
   render () {
+    console.log("check this",this.props);
     if (this.props.posts[0]) {
       if (this.state.viewPosts) {
         return(

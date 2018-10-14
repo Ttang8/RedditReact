@@ -6,7 +6,7 @@ class Header extends Component {
     super(props);
 
     this.state = {
-      subreddit: undefined,
+      subreddit: "",
       title: "all"
     };
 
@@ -33,7 +33,7 @@ class Header extends Component {
           <input type="submit" value="Submit"></input>
         </form>
         <h1>{this.state.title}</h1>
-        <HomeContainer subreddit={this.state.title}/>
+        <HomeContainer subreddit={this.state.title} update={this.update}/>
       </div>
     );
   }

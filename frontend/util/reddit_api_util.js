@@ -20,7 +20,7 @@ export const scrapeImgur = (url) => (
 
     },
     error: function(httpReq,status,exception){
-      console.log('httpReq', httpReq, status, exception);
+      // console.log('httpReq', httpReq, status, exception);
     }
   }
 ));

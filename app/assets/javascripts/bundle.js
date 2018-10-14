@@ -4563,13 +4563,11 @@ var _selectors = __webpack_require__(102);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var mapStateToProps = function mapStateToProps(_ref) {
-  var posts = _ref.posts,
-      imgurUrl = _ref.imgurUrl;
-
+var mapStateToProps = function mapStateToProps(state, ownProps) {
+  console.log("ownProps", ownProps);
   return {
-    posts: (0, _selectors.selectAllPosts)(posts),
-    imgurUrl: (0, _selectors.selectImgurUrl)(imgurUrl)
+    posts: (0, _selectors.selectAllPosts)(state.posts),
+    imgurUrl: (0, _selectors.selectImgurUrl)(state.imgurUrl)
   };
 };
 
@@ -30520,8 +30518,8 @@ var Home = function (_Component) {
     value: function renderPosts() {
       var _this6 = this;
 
-      console.log('state', this.state.array);
-      console.log('props', this.props.posts);
+      // console.log('state', this.state.array);
+      // console.log('props', this.props.posts);
       var posts = this.state.array.map(function (post, idx) {
         if (!_this6.state.viewNsfw) {
           if (_this6.props.posts[idx]) {
@@ -30620,7 +30618,7 @@ var Home = function (_Component) {
                   _react2.default.createElement(
                     'div',
                     { className: 'title_hover', onClick: _this6.handleReddit.bind(_this6), 'data-link': 'https://reddit.com' + _this6.props.posts[idx].data.permalink },
-                    'this.props.posts[idx].data.title}'
+                    _this6.props.posts[idx].data.title
                   )
                 ),
                 _react2.default.createElement('img', { src: post })
@@ -30689,6 +30687,7 @@ var Home = function (_Component) {
     value: function render() {
       var _this7 = this;
 
+      console.log("check this", this.props);
       if (this.props.posts[0]) {
         if (this.state.viewPosts) {
           return _react2.default.createElement(
@@ -30869,7 +30868,7 @@ var WholePost = function (_Component) {
   _createClass(WholePost, [{
     key: 'render',
     value: function render() {
-      console.log('wholepost', this.props);
+      // console.log('wholepost', this.props);
       return _react2.default.createElement(
         'div',
         null,
@@ -39866,7 +39865,7 @@ var scrapeImgur = exports.scrapeImgur = function scrapeImgur(url) {
     jsonpCallback: "callback",
     success: {},
     error: function error(httpReq, status, exception) {
-      console.log('httpReq', httpReq, status, exception);
+      // console.log('httpReq', httpReq, status, exception);
     }
   });
 };
@@ -39955,7 +39954,7 @@ var Header = function (_Component) {
     var _this = _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).call(this, props));
 
     _this.state = {
-      subreddit: undefined,
+      subreddit: "",
       title: "all"
     };
 
@@ -39997,7 +39996,7 @@ var Header = function (_Component) {
           null,
           this.state.title
         ),
-        _react2.default.createElement(_home_container2.default, { subreddit: this.state.title })
+        _react2.default.createElement(_home_container2.default, { subreddit: this.state.title, update: this.update })
       );
     }
   }]);
