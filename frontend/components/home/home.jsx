@@ -136,8 +136,6 @@ class Home extends Component {
   }
 
   renderPosts () {
-    // console.log('state', this.state.array);
-    // console.log('props', this.props.posts);
     let posts = this.state.array.map((post,idx) => {
       if (!this.state.viewNsfw) {
         if (this.props.posts[idx]) {
