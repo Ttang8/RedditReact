@@ -179,7 +179,7 @@ class Home extends Component {
                     {this.props.posts[idx].data.title}
                   </div>
                 </div>
-                <video autoPlay loop poster={this.props.posts[idx].data.thumbnail}>
+                <video autoPlay muted loop poster={this.props.posts[idx].data.thumbnail}>
                   <source src={gfyurl} type="video/mp4"/>
                   <img src={this.props.posts[idx].data.thumbnail}></img>
                 </video>
@@ -198,7 +198,7 @@ class Home extends Component {
                     {this.props.posts[idx].data.title}
                   </div>
                 </div>
-                <video autoPlay loop src={videourl}></video>
+                <video autoPlay muted loop src={videourl}></video>
               </a>
             </li>
           );
@@ -208,7 +208,7 @@ class Home extends Component {
               <a href={this.props.posts[idx].data.url} target="_blank">
                 <div className="image_overlay">
                   <div className="title_hover" onClick={this.handleReddit.bind(this)} data-link={`https://reddit.com${this.props.posts[idx].data.permalink}`}>
-                    this.props.posts[idx].data.title}
+                    {this.props.posts[idx].data.title}
                   </div>
                 </div>
                 <img src={post}></img>
@@ -246,13 +246,13 @@ class Home extends Component {
   handleImagesLoaded(images) {
     // setTimeout(() => images.elements[0].childNodes.forEach(img => {
     //   img.className = "image active";
-    // }), 2000);
+    // }), 5000);
   }
 
   handleLayoutComplete(laidoutitems) {
     setTimeout(() => laidoutitems.forEach(img => {
       img.element.className = "image active";
-    }), 1500);
+    }), 2500);
   }
 
   toggleViewPosts(e) {
@@ -265,6 +265,7 @@ class Home extends Component {
   }
 
   render () {
+    console.log("check this",this.props);
     if (this.props.posts[0]) {
       if (this.state.viewPosts) {
         return(

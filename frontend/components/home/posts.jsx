@@ -8,7 +8,7 @@ class WholePost extends Component {
   }
 
   render() {
-    console.log('wholepost', this.props);
+    // console.log('wholepost', this.props);
     return (
       <div>
         hello

@@ -3,10 +3,11 @@ import Home from './home';
 import { requestPosts, clearPosts, scrapeImgur } from '../../actions/post_actions';
 import { selectAllPosts, selectImgurUrl } from '../../reducers/selectors';
 
-const mapStateToProps = ({posts, imgurUrl}) => {
+const mapStateToProps = (state, ownProps) => {
+  console.log("ownProps", ownProps);
   return {
-    posts: selectAllPosts(posts),
-    imgurUrl: selectImgurUrl(imgurUrl)
+    posts: selectAllPosts(state.posts),
+    imgurUrl: selectImgurUrl(state.imgurUrl),
   };
 };
 

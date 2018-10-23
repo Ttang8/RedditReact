@@ -6,7 +6,7 @@ class Header extends Component {
     super(props);
 
     this.state = {
-      subreddit: undefined,
+      subreddit: "",
       title: "all"
     };
 
@@ -29,7 +29,7 @@ class Header extends Component {
     return (
       <div>
         <h1>{this.state.title}</h1>
-        <HomeContainer subreddit={this.state.title}/>
+        <HomeContainer subreddit={this.state.title} update={this.update}/>
       </div>
     );
   }
