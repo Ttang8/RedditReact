@@ -28,10 +28,6 @@ class Header extends Component {
   render () {
     return (
       <div>
-        <form onSubmit={this.handleSubmit}>
-          <input placeholder="Subreddit" type="text" autoFocus="autofocus" value={this.state.subreddit} onChange={this.update('subreddit')}></input>
-          <input type="submit" value="Submit"></input>
-        </form>
         <h1>{this.state.title}</h1>
         <HomeContainer subreddit={this.state.title}/>
       </div>

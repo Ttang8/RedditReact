@@ -50,12 +50,13 @@ class Home extends Component {
   handleSubmit(e) {
     e.preventDefault();
     let permSub = this.state.subreddit;
-    this.props.clearPosts();
-    this.props.requestPosts(undefined,25,this.state.subreddit)
+    this.props.clearPosts().then(
+    () => this.props.requestPosts(undefined,25,this.state.subreddit)
       .then(this.setState({title: permSub}))
       .then(this.setState({subreddit: undefined}))
       .then(() => this.handleAfter())
-      .then(() => this.createArray());
+      .then(() => this.createArray())
+    );
   }
 
   debounce(func, wait = 20, immediate = true) {
@@ -136,8 +137,6 @@ class Home extends Component {
   }
 
   renderPosts () {
-    console.log('state', this.state.array);
-    console.log('props', this.props.posts);
     let posts = this.state.array.map((post,idx) => {
       if (!this.state.viewNsfw) {
         if (this.props.posts[idx]) {
